@@ -1,0 +1,216 @@
+[gd_scene format=3 uid="uid://dwwk23aaos5i5"]
+
+[ext_resource type="Texture2D" uid="uid://vyr0ks75oxum" path="res://graphics/characters/drone.png" id="1_jk42o"]
+[ext_resource type="Script" uid="uid://1ww4bgaih2go" path="res://scenes/entities/drone/drone.gd" id="1_vxboh"]
+[ext_resource type="Texture2D" uid="uid://bav7n447bnsa5" path="res://graphics/fire/explosion.png" id="2_81vt1"]
+[ext_resource type="Shader" uid="uid://bgy7ndx4q4x2m" path="res://shaders/drone.tres" id="3_col1e"]
+[ext_resource type="Texture2D" uid="uid://dijla4pisrrw8" path="res://graphics/lights/main.png" id="4_660qd"]
+[ext_resource type="AudioStream" uid="uid://dtnqyh7corvdx" path="res://audio/explosion.wav" id="6_s1afh"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_81vt1"]
+radius = 45.0
+height = 282.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_660qd"]
+radius = 29.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vxboh"]
+radius = 39.012817
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s1afh"]
+shader = ExtResource("3_col1e")
+shader_parameter/Color = Color(0.5079712, 0.5079716, 0.5079715, 1)
+shader_parameter/progress = 1.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_vxboh"]
+radius = 7.0
+height = 20.0
+
+[sub_resource type="Animation" id="Animation_81vt1"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("drone:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("booming:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("PointLight2D:energy")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+
+[sub_resource type="Animation" id="Animation_col1e"]
+resource_name = "boom"
+length = 0.7
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("booming:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(-1.4901161e-08, 0.13333334, 0.26666668, 0.4, 0.5, 0.6, 0.6666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [1, 2, 3, 4, 5, 6, 7]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.46666667),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"chain_react"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_s1afh"]
+resource_name = "boom_before"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("booming:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_660qd"]
+resource_name = "drone_anim"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("drone:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.033333335, 0.23333333, 0.43333334, 0.6333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0, 1, 2, 3]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PointLight2D:energy")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.0, 3.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_col1e"]
+_data = {
+&"RESET": SubResource("Animation_81vt1"),
+&"boom": SubResource("Animation_col1e"),
+&"boom_before": SubResource("Animation_s1afh"),
+&"drone_anim": SubResource("Animation_660qd")
+}
+
+[node name="Drone" type="CharacterBody2D" unique_id=1926392167 groups=["drones"]]
+collision_layer = 4
+collision_mask = 11
+script = ExtResource("1_vxboh")
+drone_speed = 90
+drone_damage = 4
+
+[node name="active" type="Area2D" parent="." unique_id=1047379956]
+visible = false
+collision_layer = 0
+collision_mask = 2
+
+[node name="active" type="CollisionShape2D" parent="active" unique_id=1449452471]
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_81vt1")
+debug_color = Color(0.6848102, 0.6704891, 0.70929354, 0.41960785)
+
+[node name="attack" type="Area2D" parent="." unique_id=2112694988]
+visible = false
+collision_layer = 0
+collision_mask = 2
+
+[node name="attack" type="CollisionShape2D" parent="attack" unique_id=367567047]
+shape = SubResource("CircleShape2D_660qd")
+debug_color = Color(1, 1, 1, 0.41960785)
+
+[node name="boom" type="Area2D" parent="." unique_id=1904466850]
+visible = false
+collision_layer = 0
+collision_mask = 2
+
+[node name="boom" type="CollisionShape2D" parent="boom" unique_id=1489264381]
+shape = SubResource("CircleShape2D_vxboh")
+debug_color = Color(0.9999998, 0.009726021, 0.06356119, 0.41960785)
+
+[node name="booming" type="Sprite2D" parent="." unique_id=201202067]
+visible = false
+texture = ExtResource("2_81vt1")
+hframes = 8
+
+[node name="drone" type="Sprite2D" parent="." unique_id=602724493]
+material = SubResource("ShaderMaterial_s1afh")
+texture = ExtResource("1_jk42o")
+hframes = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1285397267]
+visible = false
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_vxboh")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1158541447]
+libraries/ = SubResource("AnimationLibrary_col1e")
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=725980077]
+position = Vector2(-2.5, 1.5000002)
+scale = Vector2(0.15, 0.14999999)
+color = Color(0.8388584, 0, 0.082342304, 1)
+texture = ExtResource("4_660qd")
+texture_scale = 0.5
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1406503763]
+stream = ExtResource("6_s1afh")
+
+[connection signal="body_entered" from="active" to="." method="_on_active_body_entered"]
+[connection signal="body_entered" from="attack" to="." method="_on_attack_body_entered"]
+[connection signal="body_entered" from="boom" to="." method="_on_boom_body_entered"]
